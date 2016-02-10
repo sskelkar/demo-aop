@@ -13,31 +13,19 @@ import org.springframework.stereotype.Component;
 public class Logging {
 
   private static final Logger LOGGER = Logger.getLogger(Logging.class);
-  
-  @Pointcut("execution(* com.maxxton.demo.car.*.*())")
-  private void noArgumentMethods() {
-  }
-  
-  @Pointcut("execution(* com.maxxton.demo.car.Navigator.*(..)) && args(distance)")
-  private void singleArgumentMethods(Long distance) {
-  }
-  
-  @Pointcut("execution(* com.maxxton.demo.car.Navigator.*(..))")
-  private void throwingMethods() {
-  }
-  
-  @Before("noArgumentMethods()")
-  public void methodInvoked(JoinPoint joinPoint) {
+
+  @Before("execution(* com.maxxton.demo.car.*.*())")
+  public void noArgumentMethodInvoked(JoinPoint joinPoint) {
     LOGGER.info("calling " + joinPoint.getSignature().getName());
   }
   
-  @Before("singleArgumentMethods(distance)")
-  public void move(JoinPoint joinPoint, Long distance) {
+  @Before("execution(* com.maxxton.demo.car.Navigator.move(..)) && args(distance)")
+  public void logDistance(JoinPoint joinPoint, Long distance) {
     LOGGER.info("moving by " + distance + "m");
   }
   
-  @AfterThrowing(pointcut="throwingMethods()", throwing="ex")
-  public void throwing(JoinPoint joinPoint, Exception ex) {
+  @AfterThrowing(pointcut="within(com.maxxton.demo..*)", throwing="ex")
+  public void logException(JoinPoint joinPoint, Exception ex) {
     LOGGER.error("Some problem occurred in " + joinPoint.getSignature().getName() + ", error message - " +  ex.getMessage());
   }
 }
