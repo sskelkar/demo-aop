@@ -16,6 +16,6 @@ public class Navigator {
   }
   
   public void move(Long distance) {
-    System.out.print("Drove " + distance + " meters");
+    System.out.println("Drove " + distance + " meters");
   }
 }
